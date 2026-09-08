@@ -28,18 +28,19 @@ VALIDATE $? "Log dir creation"
 
 for INSTANCE in $@
 do
-    INSTANCE_ID=$(aws ec2 run-instances \
-        --image-id $AMI_ID \
-        --instance-type $INS_TYPE \
-        --security-group-ids $SG_ID \
-        --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value='$INSTANCE'}]" \
-        --query 'Instances[0].InstanceId' \
-        --output text)
-    VALIDATE $? "$INSTANCE Creation is"
+INSTANCE_ID=$(aws ec2 run-instances \
+    --image-id $AMI_ID \
+    --instance-type $INS_TYPE \
+    --security-group-ids $SG_ID \
+    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value='$INSTANCE'}]" \
+    --query 'Instances[0].InstanceId' \
+    --output text)
+        
+VALIDATE $? "$INSTANCE Creation is"
 
-    echo "created $INSTANCE" | tee -a $LOG_FILE
+echo "created $INSTANCE" | tee -a $LOG_FILE
 
-    if [ $INSTANCE == "frontend" ]; then
+if [ $INSTANCE == "frontend" ]; then
 
         IP=$(aws ec2 describe-instances \
         --instance-ids $INSTANCE_ID \
@@ -49,7 +50,7 @@ do
         VALIDATE $? "IP Creation is"
         echo "Public IP address is $IP"  | tee -a $LOG_FILE
     
-    else
+else
         IP=$(aws ec2 describe-instances \
         --instance-ids $INSTANCE_ID \
         --query 'Reservations.Instances.PrivateIpAddress' \
@@ -57,7 +58,7 @@ do
         VALIDATE $? "IP Creation is"
         echo "Private IP address is $IP"  | tee -a $LOG_FILE
     
-    fi
+fi
     
 
 done
