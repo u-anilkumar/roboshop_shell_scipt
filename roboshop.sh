@@ -34,7 +34,7 @@ do
         --security-group-ids $SG_ID \
         --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value='$INSTANCE'}]" \
         --query 'Instances[0].InstanceId' \
-        --output text) &>> $LOG_FILE
+        --output text)
     VALIDATE $? "$INSTANCE Creation is"
 
     echo "created $INSTANCE" | tee -a $LOG_FILE
@@ -44,7 +44,7 @@ do
         IP=$(aws ec2 describe-instances \
         --instance-ids $INSTANCE_ID \
         --query 'Reservations.Instances.PublicIpAddress' \
-        --output text) &>> $LOG_FILE
+        --output text)
 
         VALIDATE $? "IP Creation is"
         echo "Public IP address is $IP"  | tee -a $LOG_FILE
