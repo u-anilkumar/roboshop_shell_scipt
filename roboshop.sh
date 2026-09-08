@@ -1,5 +1,5 @@
 #!/bin/bash
-AWS="/usr/local/bin/aws"
+export PATH=$PATH:/usr/local/bin
 USER=$(id -u)
 AMI_ID="ami-0220d79f3f480ecf5"
 SG_ID="sg-03dde207ea3271219"
