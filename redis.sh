@@ -2,7 +2,7 @@
 USER=$(id -u)
 LOG_DIR=/var/log/catalogue/
 LOG_FILE=$LOG_DIR/$0.log
-MONGO_HOST=mongodb.anildevops.online
+
 WD=$PWD
 
 #enable colours
