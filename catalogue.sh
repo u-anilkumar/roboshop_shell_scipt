@@ -60,7 +60,7 @@ VALIDATE $? "moving to app directory "
 
 rm -rf /app/*
 VALIDATE $? "removing existing code "
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "unzipping code"
 
 #install dependecies
@@ -87,7 +87,7 @@ VALIDATE $? "installing mongo client"
 INDEX=$(mongosh --host $MONGO_HOST --quiet  --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
 
 if [ $INDEX -lt 0 ]; then
-    mongosh --host $MONGO_HOST </app/db/master-data.js
+    mongosh --host $MONGO_HOST </app/db/master-data.js &>>$LOG_FILE
     VALIDATE $? "LOADING products"
 else
     echo -e "Products already loaded $Y SKIPPING $N"
