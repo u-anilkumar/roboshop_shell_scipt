@@ -60,14 +60,14 @@ VALIDATE $? "moving to app directory "
 
 rm -rf /app/*
 VALIDATE $? "removing existing code "
-UNZIP /tmp/catalogue.zip
+unzip /tmp/catalogue.zip
 VALIDATE $? "unzipping code"
 
 #install dependecies
 npm install &>>$LOG_FILE
 VALIDATE $? "installing dependecies"
 #create systemmctl file
-cp $WD/catalogue.sh /etc/systemd/system/catalogue.service
+cp $WD/catalogue.service /etc/systemd/system/catalogue.service
 
 systemctl daemon-reload
 VALIDATE $? "daemon-reload"
