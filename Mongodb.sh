@@ -3,26 +3,33 @@
 USER=$(id -u)
 LOG_DIR=/var/log/mongoDB/
 LOG_FILE=$LOG_DIR/$0.log
-DNS=mongodb.anildevops.online
+MONGO_HOST=mongodb.anildevops.online
+
+#enable colours
+R='\e[31m'
+G='\e[32m'
+N='\e[0m'
+Y='\e[33m'
 
 if [ $USER -ne 0 ]; then
     echo "You do not have permission to run this script"
     exit 1
 fi
 
-mkdir -p $LOG_DIR
-VALIDATE $? "Log Directory Creation is"
 
 # write validate fnction to verify status
 VALIDATE()
 {
     if [ $1 -eq 0 ]; then
-        echo "$2 ... $G SUCCESS $N" | tee -a $LOG_FILE
+        echo -e "$2 ... $G SUCCESS $N" | tee -a $LOG_FILE
     else
-        echo "$2 ... $R FAILURE $N" | tee -a $LOG_FILE
+        echo -e "$2 ... $R FAILURE $N" | tee -a $LOG_FILE
     fi
 
 }
+
+mkdir -p $LOG_DIR
+VALIDATE $? "Log Directory Creation is"
 
 cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Mongo repo creation is"
