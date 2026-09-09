@@ -1,15 +1,13 @@
 #!/bin/bash
 
 
-VALIDATE()
-{
+VALIDATE(){
     if [ $1 -ne 0 ]; then
     echo "$2 ... SUCCESS"
     else
     echo "$2 ... FAILURE"
-
-
-}
+    fi
+    }
 
 #To create EC2, we need AMI id, security grouup id and instance type(t3.micro)
 AMI_ID="ami-0220d79f3f480ecf5"
