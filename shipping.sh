@@ -67,20 +67,27 @@ VALIDATE $? "creating systemctl service"
 systemctl daemon-reload
 VALIDATE $? "daemon reload"
 
-systemctl enable shipping
+systemctl enable shipping &>>$LOG_FILE
 VALIDATE $? "enable shipping"
 
 dnf install mysql -y &>>$LOG_FILE
 VALIDATE $? "installing sql"
 
-mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql
-VALIDATE $? "Loading schema"
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
+if [ $? -ne 0 ]; then
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
+    VALIDATE $? "Loading schema"
 
-mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql 
-VALIDATE $? "Loading appuser"
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOG_FILE
+    VALIDATE $? "Loading appuser"
 
-mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql
-VALIDATE $? "Loading master data which has cities and countries"
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
+    VALIDATE $? "Loading master data which has cities and countries"
+else
+    echo -e "DB schema already loaded $Y SKIPPPING $N"
+fi
+
+
 
 systemctl start shipping
 VALIDATE $? "starting shipping"
