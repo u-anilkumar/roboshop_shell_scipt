@@ -2,15 +2,21 @@
 LOG_DIR=/var/log/rabbit/
 LOG_FILE=$LOG_DIR/$0.log
 WD=$PWD
+#enable colours
+R='\e[31m'
+G='\e[32m'
+N='\e[0m'
+Y='\e[33m'
 
 USER=$(id -u)
 if [ $USER -ne 0 ]; then
+
     echo "You donot have permission to run this script"
 fi
 
 VALIDATE()
 {
-    if [ $1 -ne 0]; then
+    if [ $1 -ne 0 ]; then
         echo -e "$2 is .. $R FAILURE $N"
     else
         echo -e "$2 is ..$G SUCCESS $N"
@@ -23,10 +29,10 @@ VALIDATE $? "LOG Dir creation"
 cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
 VALIDATE $? "copying repo"
 
-dnf install rabbitmq-server -y
+dnf install rabbitmq-server -y &>>$LOG_FILE
 VALIDATE $? "installing RabbitMQ"
 
-systemctl enable rabbitmq-server
+systemctl enable rabbitmq-server &>>$LOG_FILE
 VALIDATE $? "enabling RabbitMQ"
 systemctl start rabbitmq-server
 VALIDATE $? "starting RabbitMQ"
