@@ -1,7 +1,7 @@
 #!/bin/bash
 LOG_DIR=/var/log/shipping/
 LOG_FILE=$LOG_DIR/$0.log
-MYSQL_HOST=shipping.anildevops.online
+MYSQL_HOST=mysql.anildevops.online
 WD=$PWD
 #enable colours
 R='\e[31m'

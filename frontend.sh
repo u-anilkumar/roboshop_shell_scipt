@@ -25,9 +25,9 @@ fi
 VALIDATE()
 {
     if [ $1 -eq 0 ]; then
-        echo -e "$2 ... $G SUCCESS $N"
+        echo -e "$2 ... $G SUCCESS $N" | tee -a $LOG_FILE
     else
-        echo -e "$2 ...$G FAILURE $N"
+        echo -e "$2 ...$G FAILURE $N" | tee -a $LOG_FILE
 
     fi
 }
@@ -35,13 +35,13 @@ VALIDATE()
 mkdir -p $LOG_DIR 
 VALIDATE $? "LOG directory creation is"
 
-dnf module enable nginx:1.24 -y
+dnf module enable nginx:1.24 -y &>>$LOG_FILE
 VALIDATE $? "enabling 1.24 version"
 
-dnf install nginx -y
+dnf install nginx -y &>>$LOG_FILE
 VALIDATE $? "installing nginx"
 
-systemctl enable nginx
+systemctl enable nginx &>>$LOG_FILE
 VALIDATE $? "enabling nginx"
 
 systemctl start nginx
@@ -50,13 +50,13 @@ VALIDATE $? "starting nginx"
 rm -rf /usr/share/nginx/html/*
 VALIDATE $? "removing nginx"
 
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>$LOG_FILE
 VALIDATE $? "Code download success"
 
 cd /usr/share/nginx/html/
 
 VALIDATE $? "moving to html directory"
-unzip /tmp/frontend.zip
+unzip /tmp/frontend.zip &>>$LOG_FILE
 VALIDATE $? "unzipping frontend code"
 
 mv nginx.conf /etc/nginx/nginx.conf

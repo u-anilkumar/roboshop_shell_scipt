@@ -2,6 +2,11 @@
 LOG_DIR=/var/log/payment/
 LOG_FILE=$LOG_DIR/$0.log
 WD=$PWD
+#enable colours
+R='\e[31m'
+G='\e[32m'
+N='\e[0m'
+Y='\e[33m'
 
 USER=$(id -u)
 if [ $USER -ne 0 ]; then
@@ -10,10 +15,10 @@ fi
 
 VALIDATE()
 {
-    if [ $1 -ne 0]; then
-        echo -e "$2 is .. $R FAILURE $N"
+    if [ $1 -ne 0 ]; then
+        echo -e "$2 is .. $R FAILURE $N" | tee -a $LOG_FILE
     else
-        echo -e "$2 is ..$G SUCCESS $N"
+        echo -e "$2 is ..$G SUCCESS $N" | tee -a $LOG_FILE
     fi 
 }
 
@@ -27,11 +32,11 @@ mkdir -p /app
 VALIDATE $? "App directory creation"
 
 #Create system USER
-id roboshop
+id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin roboshop &>>$LOG_FILE
 else 
-    echo -e "Roboshop user already exists $Y SKIPPING $N"
+    echo -e "Roboshop user already exists $Y SKIPPING $N" | tee -a $LOG_FILE
 fi
 
 cd /app
@@ -44,7 +49,7 @@ VALIDATE $? "removing existing code"
 unzip /tmp/payment.zip &>>$LOG_FILE
 VALIDATE $? "unzipping code"
 
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt &>>$LOG_FILE
 VALIDATE $? "Installing dependencies"
 
 cp $WD/payment.service /etc/systemd/system/payment.service
@@ -53,7 +58,7 @@ VALIDATE $? "creating systemctl service"
 systemctl daemon-reload
 VALIDATE $? "daemon-reload"
 
-systemctl enable payment
+systemctl enable payment &>>$LOG_FILE
 VALIDATE $? "enabling payment"
 
 systemctl start payment
