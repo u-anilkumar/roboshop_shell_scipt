@@ -37,7 +37,7 @@ mkdir -p /app
 VALIDATE $? "App directory creation"
 
 #Create system USER
-id roboshop
+id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin roboshop &>>$LOG_FILE
 else 
@@ -61,7 +61,7 @@ VALIDATE $? "moving shipping jar file to app directory"
 
 #create systemctl service
 
-cp $WD/shippping.service /etc/systemd/system/shipping.service
+cp $WD/shipping.service /etc/systemd/system/shipping.service
 VALIDATE $? "creating systemctl service"
 
 systemctl daemon-reload
