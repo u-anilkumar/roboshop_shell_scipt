@@ -59,7 +59,7 @@ VALIDATE $? "moving to html directory"
 unzip /tmp/frontend.zip &>>$LOG_FILE
 VALIDATE $? "unzipping frontend code"
 
-mv nginx.conf /etc/nginx/nginx.conf
+mv $WD/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "Creating Nginx conf file" 
 
 systemctl restart nginx 
